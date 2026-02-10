@@ -14,7 +14,7 @@ class TNotaController extends Controller
     public function index()
     {
         //
-        $datas = TOrder::orderBy('date_order', 'desc')->get();
+        $datas = TOrder::orderBy('created_at', 'desc')->get();
         return view('t_nota.t_nota', compact('datas'));
     }
 
@@ -51,7 +51,7 @@ class TNotaController extends Controller
             ->when($validated['tanggal_akhir'] ?? null, function ($query, $tanggalAkhir) {
                 $query->whereDate('date_order', '<=', $tanggalAkhir);
             })
-            ->orderBy('date_order', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('t_nota.t_nota', compact('datas'));

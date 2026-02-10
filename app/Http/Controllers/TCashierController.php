@@ -184,10 +184,7 @@ class TCashierController extends Controller
 
 
 
-        return redirect()->route('nota.filter', [
-            'tanggal_awal'  => $tanggal,
-            'tanggal_akhir' => $tanggal,
-        ])->with('success', 'Semua order berhasil disimpan!');
+        return redirect()->route('nota.index')->with('success', 'Semua order berhasil disimpan!');
         
         // if ($request->type_form === 'list_form') {
         //     return redirect()

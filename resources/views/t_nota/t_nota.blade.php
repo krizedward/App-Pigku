@@ -3,6 +3,14 @@
 @section('title', 'Nota')
 
 @section('content')
+<style>
+  input[type="date"] {
+    position: relative;
+    z-index: 10; /* Memastikan input berada di atas elemen lain */
+    cursor: pointer;
+  }
+</style>
+
 <div class="row align-items-center mb-4">
   <div class="col">
     <h1 class="h3 mb-0 text-gray-800">@yield('title')</h1>
