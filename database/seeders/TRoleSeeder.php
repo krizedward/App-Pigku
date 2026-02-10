@@ -20,7 +20,17 @@ class TRoleSeeder extends Seeder
                 'id'                   => 1,
                 'role_id'              => 1,
                 'pengguna_id'          => 1,
-                'note_role'            => 1,
+                'is_active'            => 'Y',
+                'create_by'  => 'administrator',
+                'update_by'  => 'administrator',
+            ]
+        ]);
+
+        DB::table('t_role')->insert([
+            [
+                'id'                   => 2,
+                'role_id'              => 2,
+                'pengguna_id'          => 2,
                 'is_active'            => 'Y',
                 'create_by'  => 'administrator',
                 'update_by'  => 'administrator',

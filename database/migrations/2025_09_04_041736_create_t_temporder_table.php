@@ -15,10 +15,9 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('menu_id');
             $table->date('date_order');
-            $table->string('name_menu');
-            $table->integer('price_menu');
             $table->integer('qty_menu');
             $table->integer('subtotal_price');  
+            $table->string('create_by')->nullable();
             $table->timestamps();
 
             $table->foreign('menu_id')

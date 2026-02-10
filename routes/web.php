@@ -18,6 +18,10 @@ use App\Http\Controllers\TMenuPaketController;
 use App\Http\Controllers\TPenggunaController;
 use App\Http\Controllers\BRoleMenuController;
 use App\Http\Controllers\BMenuController;
+use App\Http\Controllers\TSaleController;
+use App\Http\Controllers\TCashierController;
+use App\Http\Controllers\TOrderOldController;
+use App\Http\Controllers\TNotaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/welcome', function () {
@@ -74,17 +78,32 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/paket-menu/{id}/show', [TMenuPaketController::class, 'show'])->name('paket.menu.show');
 
-    Route::get('/order', [TOrderController::class, 'index'])->name('order.index');
-    Route::get('/order/create', [TOrderController::class, 'create'])->name('order.create');
-    Route::post('/order/store', [TOrderController::class, 'store'])->name('order.store');
-    Route::get('/order/{id}/edit', [TOrderController::class, 'edit'])->name('order.edit');
-    Route::delete('/order/{id}/destroy', [TOrderController::class, 'destroy'])->name('order.destroy');
+    // Route::get('/order', [TOrderController::class, 'index'])->name('order.index');
+    // Route::get('/order/create', [TOrderController::class, 'create'])->name('order.create');
+    // Route::post('/order/store', [TOrderController::class, 'store'])->name('order.store');
+    // Route::get('/order/{id}/edit', [TOrderController::class, 'edit'])->name('order.edit');
+    // Route::delete('/order/{id}/destroy', [TOrderController::class, 'destroy'])->name('order.destroy');
 
-    Route::get('/t_order/pilih-tanggal', [TOrderController::class, 'pilihTanggal'])->name('t_order.pilih');
-    Route::get('/t_order/list/{date}', [TOrderController::class, 'listByDate'])->name('t_order.list');
-    Route::get('/t_order/list/{date}/create', [TOrderController::class, 'listCreate'])->name('t_order.create');
+    Route::get('/order', [TOrderOldController::class, 'index'])->name('order.index');
+    Route::get('/order/create', [TOrderOldController::class, 'create'])->name('order.create');
+    Route::post('/order/store', [TOrderOldController::class, 'store'])->name('order.store');
+    Route::get('/order/{id}/edit', [TOrderOldController::class, 'edit'])->name('order.edit');
+    Route::delete('/order/{id}/destroy', [TOrderOldController::class, 'destroy'])->name('order.destroy');
+
+    Route::get('/sale/pilih-tanggal', [TSaleController::class, 'pilihTanggal'])->name('t_sale.pilih');
+    Route::post('/sale/store', [TSaleController::class, 'store'])->name('t_sale.store');
+    Route::get('/sale/list/{date}', [TSaleController::class, 'listByDate'])->name('t_sale.list');
+
+    Route::get('/t_order/pilih-tanggal', [TOrderOldController::class, 'pilihTanggal'])->name('t_order.pilih');
+    Route::get('/t_order/list/{date}', [TOrderOldController::class, 'listByDate'])->name('t_order.list');
+    Route::get('/t_order/list/{date}/create', [TOrderOldController::class, 'listCreate'])->name('t_order.create');
+
+    // Route::get('/t_order/pilih-tanggal', [TOrderController::class, 'pilihTanggal'])->name('t_order.pilih');
+    // Route::get('/t_order/list/{date}', [TOrderController::class, 'listByDate'])->name('t_order.list');
+    // Route::get('/t_order/list/{date}/create', [TOrderController::class, 'listCreate'])->name('t_order.create');
 
     Route::post('/temp-order/store', [TTemporderController::class, 'store'])->name('temporder.store');
+    Route::post('/temp-order/reset', [TTemporderController::class, 'reset'])->name('temporder.reset');
     Route::delete('/temp-order/{id}/destroy', [TTemporderController::class, 'destroy'])->name('temporder.destroy');
 
     Route::get('/pengeluaran', [TExpenseController::class, 'index'])->name('expense.index');
@@ -123,6 +142,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/master-menu/store', [BMenuController::class, 'store'])->name('master-menu.store');
     Route::delete('/master-menu/{id}/destroy', [BMenuController::class, 'destroy'])->name('master-menu.destroy');
     Route::patch('/master-menu/toggle/{id}', [BMenuController::class, 'toggle'])->name('master-menu.toggle');
+
+    // kasir
+    Route::get('/kasir', [TCashierController::class, 'index'])->name('cashier.index');
+    Route::post('/kasir/store', [TCashierController::class, 'store'])->name('cashier.store');
+
+    // nota
+    Route::get('/nota', [TNotaController::class, 'index'])->name('nota.index');
+    Route::get('/nota/{id}/detail', [TNotaController::class, 'detail'])->name('nota.detail');
+    Route::get('/nota/filter', [TNotaController::class, 'filter'])->name('nota.filter');
 });
 
 // old

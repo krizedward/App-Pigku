@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TExpense;
 use App\Models\TOrder;
+use App\Models\TOrderOld;
+use App\Models\TSale;
 use App\Models\TDebit;
 use App\Models\TKredit;
 use App\Models\TSaldo;
@@ -21,16 +23,17 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        
-        if ($user && $user->t_pengguna->t_role->m_role->id == 2) {
-            
-            $date = Carbon::today();
+        $roleId = $user?->t_pengguna?->t_role?->m_role?->id;
+        $date = Carbon::today();
+        $text = ""; // Default kosong
 
+        if ($roleId == 2) {
+            
             // Format tanggal
             $date_today = Carbon::parse($date)->locale('id')->translatedFormat('l, j F Y');
 
             // Ambil data penjualan
-            $orders = TOrder::with('t_menu')->where('date_order', $date)->get();
+            $orders = TOrderOld::with('t_menu')->where('date_order', $date)->get();
 
             // Buat daftar detail + hitung total
             $pemasukanList = "";
@@ -85,7 +88,7 @@ class DashboardController extends Controller
             $tahun = $request->input('tahun', Carbon::today()->year);
 
             // Ambil total order per tanggal
-            $orders = TOrder::select('date_order', \DB::raw('SUM(total_price) as total'))
+            $orders = TOrderOld::select('date_order', \DB::raw('SUM(total_price) as total'))
                 ->whereMonth('date_order', $bulan)
                 ->whereYear('date_order', $tahun)
                 ->groupBy('date_order')
@@ -101,133 +104,144 @@ class DashboardController extends Controller
             // Hanya tampilkan data untuk hari ini saja
             $today = Carbon::today()->toDateString();
 
-            $dates = [[
+            $dates_2_role = [[
                 'date'    => $today,
                 'order'   => $orders[$today] ?? 0,
                 'expense' => $expenses[$today] ?? 0,
             ]];
 
+            // $saldoPerusahaan = 0;
+            // $totalJumlah = 0;
+            // $totalPertusuk = 0;
+            // $totalBalance = 0;
+            // $totalPendapatan = 0;
+            // $totalPengeluaran = 0;
 
-            return view('dashboard.main', compact('text','dates'));
+            // return view('dashboard.main', compact('text','dates', 'saldoPerusahaan','totalJumlah','totalPertusuk','totalBalance','totalPendapatan','totalPengeluaran'));
 
-        } else {
-            // ambil input bulan & tahun (jika ada), kalau tidak ada default ke hari ini
-            $bulan = $request->input('bulan', Carbon::today()->month);
-            $tahun = $request->input('tahun', Carbon::today()->year);
+        } 
+        
+        // ambil input bulan & tahun (jika ada), kalau tidak ada default ke hari ini
+        $bulan = $request->input('bulan', Carbon::today()->month);
+        $tahun = $request->input('tahun', Carbon::today()->year);
 
-            // ambil bulan & tahun sebelumnya
-            $prevMonth = Carbon::create($tahun, $bulan, 1)->subMonth();
-            $bulanLalu = $prevMonth->month;
-            $tahunLalu = $prevMonth->year;
-            $menuIds = [1,5,6,7,8,9,10];
-            $IdPertusuk = [3,4];
-
-            // List Menu Order
-            $listMenu = TMenu::all();
-
-            // List Saldo 
-            $listSaldoLog = TSaldoLog::all();
+        // ambil bulan & tahun sebelumnya
+        $prevMonth = Carbon::create($tahun, $bulan, 1)->subMonth();
+        $bulanLalu = $prevMonth->month;
+        $tahunLalu = $prevMonth->year;
+        $menuIds = [1,5,6,7,8,9,10];
+        $IdPertusuk = [3,4];
             
-            // jumlah total order sate
-            $totalJumlah = TOrder::whereIn('menu_id', $menuIds)
-                ->whereMonth('date_order', $bulan)
-                ->whereYear('date_order', $tahun)
-                ->sum('qty_order');
+        // jumlah total order sate
+        $totalJumlah = TOrderOld::whereIn('menu_id', $menuIds)
+            ->whereMonth('date_order', $bulan)
+            ->whereYear('date_order', $tahun)
+            ->sum('qty_order');
             
-            // jumlah total per tusuk
-            $totalPertusuk = TOrder::whereIn('menu_id', $IdPertusuk)
-                ->whereMonth('date_order', $bulan)
-                ->whereYear('date_order', $tahun)
-                ->sum('qty_order');
+        // jumlah total per tusuk
+        $totalPertusuk = TOrderOld::whereIn('menu_id', $IdPertusuk)
+            ->whereMonth('date_order', $bulan)
+            ->whereYear('date_order', $tahun)
+            ->sum('qty_order');
 
-            // Ambil total order per tanggal
-            $orders = TOrder::select('date_order', \DB::raw('SUM(total_price) as total'))
-                ->whereMonth('date_order', $bulan)
-                ->whereYear('date_order', $tahun)
-                ->groupBy('date_order')
-                ->pluck('total', 'date_order');
+        // Ambil total order per tanggal
+        $orders = TOrderOld::select('date_order', \DB::raw('SUM(total_price) as total'))
+            ->whereMonth('date_order', $bulan)
+            ->whereYear('date_order', $tahun)
+            ->groupBy('date_order')
+            ->pluck('total', 'date_order');
+            
+        // $orders = TSale::select('date_order', \DB::raw('SUM(total_price) as total'))
+        //     ->whereMonth('date_order', $bulan)
+        //     ->whereYear('date_order', $tahun)
+        //     ->groupBy('date_order')
+        //     ->pluck('total', 'date_order');
 
-            // Ambil total expense per tanggal
-            $expenses = TExpense::select('date_expense', \DB::raw('SUM(total_price) as total'))
-                ->whereMonth('date_expense', $bulan)
-                ->whereYear('date_expense', $tahun)
-                ->groupBy('date_expense')
-                ->pluck('total', 'date_expense');
+        // Ambil total expense per tanggal
+        $expenses = TExpense::select('date_expense', \DB::raw('SUM(total_price) as total'))
+            ->whereMonth('date_expense', $bulan)
+            ->whereYear('date_expense', $tahun)
+            ->groupBy('date_expense')
+            ->pluck('total', 'date_expense');
 
-            // Tentukan rentang tanggal
-            $today = Carbon::today();
-            $start = ($today->month == $bulan && $today->year == $tahun)
-                ? $today
-                : Carbon::create($tahun, $bulan, 1)->endOfMonth();
+        // Tentukan rentang tanggal
+        $today = Carbon::today();
+        $start = ($today->month == $bulan && $today->year == $tahun)
+            ? $today
+            : Carbon::create($tahun, $bulan, 1)->endOfMonth();
+        
+        $end = Carbon::create($tahun, $bulan, 1)->startOfMonth();
 
-            $end = Carbon::create($tahun, $bulan, 1)->startOfMonth();
+        // Generate semua tanggal mundur
+        $dates = [];
+        for ($date = $start->copy(); $date->gte($end); $date->subDay()) {
+            $key = $date->toDateString();
+            $dates[] = [
+                'date'    => $key,
+                'order'   => $orders[$key] ?? 0,
+                'expense' => $expenses[$key] ?? 0,
+            ];
+        }
 
-            // Generate semua tanggal mundur
-            $dates = [];
-            for ($date = $start->copy(); $date->gte($end); $date->subDay()) {
-                $key = $date->toDateString();
-                $dates[] = [
-                    'date'    => $key,
-                    'order'   => $orders[$key] ?? 0,
-                    'expense' => $expenses[$key] ?? 0,
-                ];
-            }
+        // Hitung total pendapatan
+        $totalPendapatan = TDebit::whereMonth('date_debit', $bulan)
+            ->whereYear('date_debit', $tahun)
+            ->sum('amount_debit');
 
-            // Hitung total pendapatan
-            $totalPendapatan = TDebit::whereMonth('date_debit', $bulan)
-                ->whereYear('date_debit', $tahun)
-                ->sum('amount_debit');
+        // Hitung total pengeluaran
+        $totalPengeluaran = TKredit::whereMonth('date_kredit', $bulan)
+            ->whereYear('date_kredit', $tahun)
+            ->sum('amount_kredit');
 
-            // Hitung total pengeluaran
-            $totalPengeluaran = TKredit::whereMonth('date_kredit', $bulan)
-                ->whereYear('date_kredit', $tahun)
-                ->sum('amount_kredit');
+        $totalBalance = $totalPendapatan - $totalPengeluaran;
 
-            $totalBalance = $totalPendapatan - $totalPengeluaran;
+        // Ambil saldo bulan sebelumnya
+        $dataSaldo = TSaldo::whereMonth('end_date', $bulanLalu)
+            ->whereYear('end_date', $tahunLalu)
+            ->latest('id')
+            ->first();
 
-            // Ambil saldo bulan sebelumnya
-            $dataSaldo = TSaldo::whereMonth('end_date', $bulanLalu)
-                ->whereYear('end_date', $tahunLalu)
-                ->latest('id')
+        $saldoSebelumnya = $dataSaldo ? $dataSaldo->ending_saldo : 0;
+        $saldoPerusahaan = $totalBalance + $saldoSebelumnya;
+
+        // === SIMPAN OTOMATIS KE TSaldo SAAT AKHIR BULAN ===
+        $akhirBulan = Carbon::create($tahun, $bulan, 1)->endOfMonth();
+
+        if ($today->isSameDay($akhirBulan)) {
+            $cekSaldo = TSaldo::where('start_date', Carbon::create($tahun, $bulan, 1))
+                ->where('end_date', $akhirBulan)
                 ->first();
 
-            $saldoSebelumnya = $dataSaldo ? $dataSaldo->ending_saldo : 0;
-            $saldoPerusahaan = $totalBalance + $saldoSebelumnya;
-
-            // === SIMPAN OTOMATIS KE TSaldo SAAT AKHIR BULAN ===
-            $akhirBulan = Carbon::create($tahun, $bulan, 1)->endOfMonth();
-
-            if ($today->isSameDay($akhirBulan)) {
-                $cekSaldo = TSaldo::where('start_date', Carbon::create($tahun, $bulan, 1))
-                    ->where('end_date', $akhirBulan)
-                    ->first();
-
-                if (!$cekSaldo) {
-                    TSaldo::create([
-                        'start_date'     => Carbon::create($tahun, $bulan, 1),
-                        'end_date'       => $akhirBulan,
-                        'starting_saldo' => $saldoSebelumnya,
-                        'income_saldo'   => $totalPendapatan,
-                        'expense_saldo'  => $totalPengeluaran,
-                        'ending_saldo'   => $saldoPerusahaan,
-                    ]);
-                }
+            if (!$cekSaldo) {
+                TSaldo::create([
+                    'start_date'     => Carbon::create($tahun, $bulan, 1),
+                    'end_date'       => $akhirBulan,
+                    'starting_saldo' => $saldoSebelumnya,
+                    'income_saldo'   => $totalPendapatan,
+                    'expense_saldo'  => $totalPengeluaran,
+                    'ending_saldo'   => $saldoPerusahaan,
+                ]);
             }
-
-            return view('dashboard.main', compact(
-                'dates',
-                'totalPendapatan',
-                'totalPengeluaran',
-                'totalBalance',
-                'saldoPerusahaan',
-                'totalJumlah',
-                'totalPertusuk',
-                'listMenu',
-                'listSaldoLog',
-                'bulan',
-                'tahun'
-            ));
         }
+
+        // merubah dates untuk ubah data dates
+        if($roleId == 2){
+            $dates = $dates_2_role;
+        }
+
+        return view('dashboard.main', compact(
+            'text',
+            'dates',
+            'totalPendapatan',
+            'totalPengeluaran',
+            'totalBalance',
+            'saldoPerusahaan',
+            'totalJumlah',
+            'totalPertusuk',
+            'bulan',
+            'tahun'
+        ));
+
     }
 
     public function index_01()

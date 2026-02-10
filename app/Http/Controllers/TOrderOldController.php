@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TOrder;
-use App\Models\TSale;
+use App\Models\TOrderOld;
 use App\Models\TTemporder;
 use App\Models\TMenu;
 use App\Models\TDebit;
 use App\Models\TKredit;
 use Illuminate\Support\Facades\Auth;
 
-class TOrderController extends Controller
+class TOrderOldController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,8 +20,8 @@ class TOrderController extends Controller
     {
         //
         // $orders = TOrder::all();
-        $orders = TOrder::orderBy('date_order', 'desc')->get();
-        return view('t_order.t_order', compact('orders'));
+        $orders = TOrderOld::orderBy('date_order', 'desc')->get();
+        return view('t_order_old.t_order_old', compact('orders'));
     }
 
     /**
@@ -32,7 +32,7 @@ class TOrderController extends Controller
         //
         $temp_order = TTemporder::all();
         $menu = TMenu::all();
-        return view('t_order.t_order_create', compact('temp_order','menu'));
+        return view('t_order_old.t_order_old_create', compact('temp_order','menu'));
     }
 
     public function listCreate($date)
@@ -42,9 +42,9 @@ class TOrderController extends Controller
         $tanggal = \Carbon\Carbon::parse($date)->format('Y-m-d');
         $temp_order = TTemporder::all();
         $menu = TMenu::all();
-        return view('t_order.list_order_create', compact('tanggal', 'temp_order','menu'));
+        return view('t_order_old.list_order_old_create', compact('tanggal', 'temp_order','menu'));
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -56,7 +56,7 @@ class TOrderController extends Controller
             'orders.*.menu_id'       => 'required|exists:t_menu,id',
             'orders.*.date_order'    => 'required|date',
             'orders.*.qty_order'     => 'required|integer|min:1',
-            'orders.*.price_menu'    => 'required|integer',
+            // 'orders.*.price_menu'    => 'required|integer',
             'orders.*.subtotal_price'=> 'required|integer',
         ]);
 
@@ -69,7 +69,7 @@ class TOrderController extends Controller
             $menu = TMenu::findOrFail($orderData['menu_id']);
             $totalPrice = $menu->price_menu * $orderData['qty_order'];
 
-            TOrder::create([
+            TOrderOld::create([
                 'menu_id'     => $orderData['menu_id'],
                 'date_order'  => $orderData['date_order'],
                 'qty_order'   => $orderData['qty_order'],
@@ -137,10 +137,10 @@ class TOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
         //
-        $id = TOrder::find($id);
+        $id = TOrderOld::find($id);
         $id->delete();
         return redirect()->route('order.index')->with('success', 'Data berhasil dihapus.');
     }
@@ -148,7 +148,7 @@ class TOrderController extends Controller
     public function pilihTanggal()
     {
         // Ambil semua tanggal order unik
-        $dates = TOrder::select('date_order')
+        $dates = TOrderOld::select('date_order')
             ->distinct()
             ->orderBy('date_order', 'desc')
             ->get();
@@ -157,17 +157,17 @@ class TOrderController extends Controller
         $totalPengeluaran = TKredit::sum('amount_kredit'); // ganti 'jumlah' dengan nama kolom nominal di tabelmu
         $totalBalance = $totalPendapatan - $totalPengeluaran;
 
-        return view('t_order.pilih_tanggal', compact('dates', 'totalPendapatan', 'totalPengeluaran', 'totalBalance'));
+        return view('t_order_old.pilih_tanggal', compact('dates', 'totalPendapatan', 'totalPengeluaran', 'totalBalance'));
     }
 
     public function listByDate($date)
     {
-        $orders = TOrder::with('t_menu')
+        $orders = TOrderOld::with('t_menu')
             ->where('date_order', $date)
             ->get();
 
         $totalSemua = $orders->sum('total_price');
 
-        return view('t_order.list_order', compact('orders', 'date', 'totalSemua'));
+        return view('t_order_old.list_order_old', compact('orders', 'date', 'totalSemua'));
     }
 }

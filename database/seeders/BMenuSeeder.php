@@ -115,6 +115,28 @@ class BMenuSeeder extends Seeder
                 'menu_type'            => 'paging',
                 'is_active'            => 'Y',
             ],
+            [
+                'id'                   => 10,
+                'menu_code'            => 'kasir',
+                'menu_category_code'   => 'sales',
+                'menu_name'            => 'Kasir',
+                'menu_host'            => null,
+                'update_url'           => null,
+                'menu_order'           => '2',
+                'menu_type'            => 'paging',
+                'is_active'            => 'Y',
+            ],
+            [
+                'id'                   => 11,
+                'menu_code'            => 'nota',
+                'menu_category_code'   => 'sales',
+                'menu_name'            => 'Nota',
+                'menu_host'            => null,
+                'update_url'           => null,
+                'menu_order'           => '2',
+                'menu_type'            => 'paging',
+                'is_active'            => 'Y',
+            ],
         ]);
     }
 }

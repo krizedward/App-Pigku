@@ -14,23 +14,46 @@ class TPenggunaSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        // Make sure there’s at least one user in the users table
-        $user = User::first() ?? User::factory()->create([
-            'name' => 'administrator',
-            'email' => 'admin@admin.com',
-            'password' => bcrypt('12345678'),
-        ]);
+        // ADMIN
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Administrator',
+                'password' => bcrypt('12345678'),
+            ]
+        );
 
-        // Create some sample TPengguna records
-        TPengguna::create([
-            'user_id' => $user->id,
-            'code_pengguna' => 'PGN-202510280983',
-            'fullname_pengguna' => 'Edward Kristian Mangare',
-            'username_pengguna' => 'edwardisme',
-            'note_pengguna' => 'Tidak ada',
-            'is_active' => 'Y',
-            'create_by' => 'administrator',
-        ]);
+        TPengguna::firstOrCreate(
+            ['user_id' => $admin->id],
+            [
+                'code_pengguna' => 'PGN-ADMIN-001',
+                'fullname_pengguna' => 'Administrator System',
+                'username_pengguna' => 'admin',
+                'note_pengguna' => 'Akun default',
+                'is_active' => 'Y',
+                'create_by' => 'system',
+            ]
+        );
+
+        // OWNER
+        $owner = User::firstOrCreate(
+            ['email' => 'renaltmangare15@gmail.com'],
+            [
+                'name' => 'owner.renalt',
+                'password' => bcrypt('12345678'),
+            ]
+        );
+
+        TPengguna::firstOrCreate(
+            ['user_id' => $owner->id],
+            [
+                'code_pengguna' => 'PGN-OWNER-001',
+                'fullname_pengguna' => 'Renalt Mangare',
+                'username_pengguna' => 'owner',
+                'note_pengguna' => 'Pemilik restoran',
+                'is_active' => 'Y',
+                'create_by' => 'system',
+            ]
+        );
     }
 }

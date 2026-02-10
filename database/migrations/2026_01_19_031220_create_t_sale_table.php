@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('t_order', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('code_order')->nullable();
+        Schema::create('t_sale', function (Blueprint $table) {
+            $table->id();
+            $table->string('name_menu')->nullable();
+            $table->integer('price_menu')->nullable();
             $table->date('date_order');                 // tanggal order
-            $table->integer('total_item');             // total item menu
+            $table->integer('qty_order');               // jumlah pesanan
             $table->integer('total_price');             // total harga menu
-            $table->text('note_order')->nullable();     // catatan
+            $table->text('note_sale')->nullable();     // catatan
             $table->string('create_by')->nullable();
             $table->string('update_by')->nullable();
             $table->timestamps(); 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('t_order');
+        Schema::dropIfExists('t_sale');
     }
 };

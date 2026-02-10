@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\TOrder;
 use App\Models\TSale;
 use App\Models\TTemporder;
 use App\Models\TMenu;
@@ -11,7 +10,7 @@ use App\Models\TDebit;
 use App\Models\TKredit;
 use Illuminate\Support\Facades\Auth;
 
-class TOrderController extends Controller
+class TSaleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,9 +18,6 @@ class TOrderController extends Controller
     public function index()
     {
         //
-        // $orders = TOrder::all();
-        $orders = TOrder::orderBy('date_order', 'desc')->get();
-        return view('t_order.t_order', compact('orders'));
     }
 
     /**
@@ -30,26 +26,14 @@ class TOrderController extends Controller
     public function create()
     {
         //
-        $temp_order = TTemporder::all();
-        $menu = TMenu::all();
-        return view('t_order.t_order_create', compact('temp_order','menu'));
     }
 
-    public function listCreate($date)
-    {
-        //
-        // Pastikan format tanggal valid
-        $tanggal = \Carbon\Carbon::parse($date)->format('Y-m-d');
-        $temp_order = TTemporder::all();
-        $menu = TMenu::all();
-        return view('t_order.list_order_create', compact('tanggal', 'temp_order','menu'));
-    }
-    
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        //
         // return Auth::user()->name;
         $validated = $request->validate([
             'orders'                 => 'required|array',
@@ -69,9 +53,10 @@ class TOrderController extends Controller
             $menu = TMenu::findOrFail($orderData['menu_id']);
             $totalPrice = $menu->price_menu * $orderData['qty_order'];
 
-            TOrder::create([
-                'menu_id'     => $orderData['menu_id'],
+            TSale::create([
+                'name_menu'   => $menu->name_menu,
                 'date_order'  => $orderData['date_order'],
+                'price_menu'  => $menu->price_menu,
                 'qty_order'   => $orderData['qty_order'],
                 'total_price' => $totalPrice,
                 'create_by'   => $user, 
@@ -103,6 +88,10 @@ class TOrderController extends Controller
         if ($request->type_form === 'list_form') {
             return redirect()
                 ->route('t_order.list', ['date' => $tanggal])
+                ->with('success', 'Order berhasil ditambahkan!');
+        } elseif ($request->type_form === 'cashier') {
+            return redirect()
+                ->route('t_sale.list', ['date' => $tanggal])
                 ->with('success', 'Order berhasil ditambahkan!');
         } else {
             return redirect()->route('order.index')
@@ -137,18 +126,15 @@ class TOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
         //
-        $id = TOrder::find($id);
-        $id->delete();
-        return redirect()->route('order.index')->with('success', 'Data berhasil dihapus.');
     }
 
     public function pilihTanggal()
     {
         // Ambil semua tanggal order unik
-        $dates = TOrder::select('date_order')
+        $dates = TSale::select('date_order')
             ->distinct()
             ->orderBy('date_order', 'desc')
             ->get();
@@ -162,12 +148,10 @@ class TOrderController extends Controller
 
     public function listByDate($date)
     {
-        $orders = TOrder::with('t_menu')
-            ->where('date_order', $date)
-            ->get();
+        $orders = TSale::where('date_order', $date)->get();
 
         $totalSemua = $orders->sum('total_price');
 
-        return view('t_order.list_order', compact('orders', 'date', 'totalSemua'));
+        return view('t_sale.list_sale', compact('orders', 'date', 'totalSemua'));
     }
 }
