@@ -228,13 +228,13 @@
                         </div>
 
                         <div class="d-none d-md-block mt-3">
-                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
+                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
                         </div>
                       </div>
                     </div>
 
                     <div class="d-block d-md-none mt-3 mt-auto">
-                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
+                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
                     </div>
 
                   </div>
@@ -271,13 +271,13 @@
                         </div>
 
                         <div class="d-none d-md-block mt-3">
-                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
+                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
                         </div>
                       </div>
                     </div>
 
                     <div class="d-block d-md-none mt-3 mt-auto">
-                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
+                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
                     </div>
 
                   </div>
@@ -314,13 +314,13 @@
                         </div>
 
                         <div class="d-none d-md-block mt-3">
-                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
+                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
                         </div>
                       </div>
                     </div>
 
                     <div class="d-block d-md-none mt-3 mt-auto">
-                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
+                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
                     </div>
 
                   </div>
@@ -357,13 +357,13 @@
                         </div>
 
                         <div class="d-none d-md-block mt-3">
-                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
+                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
                         </div>
                       </div>
                     </div>
 
                     <div class="d-block d-md-none mt-3 mt-auto">
-                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
+                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
                     </div>
 
                   </div>
@@ -400,13 +400,13 @@
                         </div>
 
                         <div class="d-none d-md-block mt-3">
-                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
+                          @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
                         </div>
                       </div>
                     </div>
 
                     <div class="d-block d-md-none mt-3 mt-auto">
-                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Add'])
+                      @include('t_cashier.form_order', ['data' => $data, 'btnText' => 'Tambah'])
                     </div>
 
                   </div>

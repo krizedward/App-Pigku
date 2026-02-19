@@ -16,7 +16,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary btn-sm px-3 shadow-sm">
-      <i class="fa fa-plus mr-1"></i> {{ $btnText ?? 'Tambah' }}
+      <i class="fa fa-plus mr-1"></i>{{ $btnText ?? 'Tambah' }}
     </button>
   </div>
 </form>

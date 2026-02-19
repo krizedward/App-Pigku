@@ -3,7 +3,7 @@
 use App\Http\Controllers\TSaldoController;
 use App\Http\Controllers\TIncomeController;
 use App\Http\Controllers\TTemporderController;
-use App\Http\Controllers\TTempExpenseController;
+use App\Http\Controllers\TTempexpenseController;
 use App\Http\Controllers\TExpenseController;
 use App\Http\Controllers\TOrderController;
 use App\Http\Controllers\TMenuController;
@@ -112,8 +112,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/list/pengeluaran/{date}', [TExpenseController::class, 'listByDate'])->name('expense.list');
     Route::get('/list/pengeluaran/{date}/create', [TExpenseController::class, 'listCreate'])->name('expense.list.create');
 
-    Route::post('/temp-expense/store', [TTempExpenseController::class, 'store'])->name('tempexpense.store');
-    Route::delete('/temp-expense/{id}/destroy', [TTempExpenseController::class, 'destroy'])->name('tempexpense.destroy');
+    Route::post('/temp-expense/store', [TTempexpenseController::class, 'store'])->name('tempexpense.store');
+    Route::delete('/temp-expense/{id}/destroy', [TTempexpenseController::class, 'destroy'])->name('tempexpense.destroy');
 
     Route::get('/income', [TIncomeController::class, 'index'])->name('income.index');
     Route::get('/income/create', [TIncomeController::class, 'create'])->name('income.create');
@@ -151,6 +151,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/nota', [TNotaController::class, 'index'])->name('nota.index');
     Route::get('/nota/{id}/detail', [TNotaController::class, 'detail'])->name('nota.detail');
     Route::get('/nota/filter', [TNotaController::class, 'filter'])->name('nota.filter');
+    Route::put('/nota/{id}/update', [TNotaController::class, 'update'])->name('nota.update');
 });
 
 // old

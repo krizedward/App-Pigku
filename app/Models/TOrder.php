@@ -18,9 +18,11 @@ class TOrder extends Model
     protected $fillable = [
         'code_order',
         'date_order',
+        'time_order',
         'total_item',
         'total_price',
         'note_order',
+        'cashier_name',
         'create_by',
         'update_by',
     ];
