@@ -25,7 +25,7 @@
   <div class="col-xl-12 col-lg-12">
     <div class="card shadow mb-4">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tabel Data</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Index Tabel Data</h6>
         <div class="dropdown no-arrow">
           <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -50,6 +50,7 @@
               <tr>
                 <th style="text-align: center;vertical-align: middle;">No</th>
                 <th style="text-align: center;vertical-align: middle;">Nama Pengguna</th>
+                <th style="text-align: center;vertical-align: middle;">Username Pengguna</th>
                 <th style="text-align: center;vertical-align: middle;">Jenis Akun </th>
                 <th style="text-align: center;vertical-align: middle;">Status Akun</th>
                 <th style="text-align: center;vertical-align: middle;">Catatan</th>
@@ -61,10 +62,11 @@
               @forelse($data as $index => $dt)
               <tr>
                 <td>{{ $index + 1 }}</td>
+                <td>{{ $dt->t_pengguna->fullname_pengguna }}</td>
                 <td>{{ $dt->t_pengguna->username_pengguna }}</td>
                 <td>{{ $dt->m_role->name_role }}</td>
                 <td>{{ $dt->is_active }}</td>
-                <td>{{ $dt->note_role }}</td>
+                <td>{{ $dt->t_pengguna->note_pengguna }}</td>
                 <td colspan="2">
                   <div class='d-flex'>
                     <a class='btn btn-sm btn-warning mr-2' href="{{ route('pengguna.edit', $dt->id) }}"><i class='fa fa-edit'></i></a>

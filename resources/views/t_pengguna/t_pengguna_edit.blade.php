@@ -9,41 +9,61 @@
   </div>
 </div>
 
-@if(session('success'))
-  <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+@foreach (['success', 'error', 'warning', 'info'] as $msg)
+  @if(session($msg))
+    <div class="alert alert-{{ $msg == 'error' ? 'danger' : $msg }}">
+      {{ session($msg) }}
+    </div>
+  @endif
+@endforeach
 
 <div class="row">
   <div class="col-xl-12 col-lg-12">
     <div class="card shadow mb-4">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tabel Data</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Pengguna</h6>
       </div>
       <!-- Card Body -->
       <div class="card-body">
         <div class="container">
-          <form action="{{ route('pengguna.store') }}" method="POST" id="orderForm">
+          <form action="{{ route('pengguna.update', $dt_pengguna->id) }}" method="POST" id="orderForm">
             @csrf
+            @method('PUT')
+
             <div class="form-group">
               <label for="name_pengguna">Nama Pengguna</label>
               <input type="text" class="form-control" id="name_pengguna" name="name_pengguna"
-                placeholder="Masukkan Nama Pengguna" required>
+                value="{{ $dt_pengguna->t_pengguna->fullname_pengguna }}" placeholder="Masukkan Nama Pengguna" required>
+            </div>
+
+            <div class="form-group">
+              <label for="username_pengguna">Username Pengguna</label>
+              <input type="text" class="form-control" id="username_pengguna" name="username_pengguna"
+                value="{{ $dt_pengguna->t_pengguna->username_pengguna }}" placeholder="Masukkan Username Pengguna" required>
             </div>
 
             <div class="form-group">
               <label for="email_pengguna">Email Pengguna</label>
               <input type="email" class="form-control" id="email_pengguna" name="email_pengguna"
-                placeholder="Masukkan Email Pengguna" required>
+                value="{{ $dt_pengguna->t_pengguna->user->email }}" placeholder="Masukkan Email Pengguna" required>
             </div>
             
             <div class="form-group">
               <label for="jenis_pengguna">Jenis Pengguna</label>
               <select name="jenis_pengguna" id="jenis_pengguna" class="form-control" required>
-                <option value="">-- Pilih Role --</option>
                 @foreach ($data as $dt)
-                  <option value="{{ $dt->id }}">{{ $dt->name_role }}</option>
+                  <option value="{{ $dt->id }}"
+                    {{ $dt->id == $dt_pengguna->role_id ? 'selected' : '' }}>
+                    {{ $dt->name_role }}
+                  </option>
                 @endforeach
               </select>
+            </div>
+
+            <div class="form-group">
+              <label for="note_pengguna">Catatan Pengguna</label>
+              <input type="text" class="form-control" id="note_pengguna" name="note_pengguna"
+                value="{{ $dt_pengguna->t_pengguna->note_pengguna }}" placeholder="Masukkan Catatan Pengguna" required>
             </div>
 
             <div class="form-group">

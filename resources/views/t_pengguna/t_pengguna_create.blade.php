@@ -9,15 +9,19 @@
   </div>
 </div>
 
-@if(session('success'))
-  <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+@foreach (['success', 'error', 'warning', 'info'] as $msg)
+  @if(session($msg))
+    <div class="alert alert-{{ $msg == 'error' ? 'danger' : $msg }}">
+      {{ session($msg) }}
+    </div>
+  @endif
+@endforeach
 
 <div class="row">
   <div class="col-xl-12 col-lg-12">
     <div class="card shadow mb-4">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Tabel Data</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Pengguna</h6>
       </div>
       <!-- Card Body -->
       <div class="card-body">
@@ -28,6 +32,12 @@
               <label for="name_pengguna">Nama Pengguna</label>
               <input type="text" class="form-control" id="name_pengguna" name="name_pengguna"
                 placeholder="Masukkan Nama Pengguna" required>
+            </div>
+
+            <div class="form-group">
+              <label for="username_pengguna">Username Pengguna</label>
+              <input type="text" class="form-control" id="username_pengguna" name="username_pengguna"
+                placeholder="Masukkan Username Pengguna" required>
             </div>
 
             <div class="form-group">
@@ -46,6 +56,12 @@
               </select>
             </div>
 
+
+            <div class="form-group">
+              <label for="note_pengguna">Catatan Pengguna</label>
+              <input type="text" class="form-control" id="note_pengguna" name="note_pengguna"
+                placeholder="Masukkan Catatan Pengguna" required>
+            </div>
 
             <div class="form-group">
               <label for="is_active">Active?</label>
