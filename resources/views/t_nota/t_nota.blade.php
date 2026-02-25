@@ -6,7 +6,6 @@
 <style>
   input[type="date"] {
     position: relative;
-    z-index: 10; /* Memastikan input berada di atas elemen lain */
     cursor: pointer;
   }
 </style>
@@ -61,8 +60,8 @@
 </div>
 
 <div class="row">
-  @foreach($datas as $index => $data)
-  <!-- Earnings (Monthly) Card Example -->
+
+  @forelse($datas as $index => $data)
   <div class="col-xl-3 col-md-6 mb-4">
     <a href="{{ route('nota.detail', $data->code_order) }}" class="text-decoration-none">
       <div class="card border-left-info shadow h-100 py-2">
@@ -71,12 +70,13 @@
             <div class="col-12">
               <div class="font-weight-bold text-info mb-1">{{ $data->code_order ?? '-' }}</div>
             </div>
-            <!-- KIRI -->
+
             <div class="col-7">
-              <div class="mt-2 font-weight-bold">Total Rp {{ number_format($data->total_price,0,',','.')  ?? '-' }}</div>
+              <div class="mt-2 font-weight-bold">
+                Total Rp {{ number_format($data->total_price,0,',','.') ?? '-' }}
+              </div>
             </div>
 
-            <!-- KANAN -->
             <div class="col-5 text-right">
               <div class="mt-2">
                 {{ $data->total_item ?? '-' }} item
@@ -88,7 +88,12 @@
       </div>
     </a>
   </div>
-  @endforeach
+
+  @empty
+    <div class="col-12 text-center py-5">
+        <h5 class="text-muted">Tidak ada data</h5>
+    </div>
+  @endforelse
 
 </div>
 @endsection

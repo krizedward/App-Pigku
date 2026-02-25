@@ -151,7 +151,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/nota', [TNotaController::class, 'index'])->name('nota.index');
     Route::get('/nota/{id}/detail', [TNotaController::class, 'detail'])->name('nota.detail');
     Route::get('/nota/filter', [TNotaController::class, 'filter'])->name('nota.filter');
+    Route::get('/nota/{id}/edit', [TNotaController::class, 'edit'])->name('nota.edit');
     Route::put('/nota/{id}/update', [TNotaController::class, 'update'])->name('nota.update');
+    Route::delete('/nota/{id}/destroy', [TNotaController::class, 'destroy'])->name('nota.destroy');
 });
 
 // old

@@ -94,6 +94,13 @@ class TNotaController extends Controller
     public function edit(string $id)
     {
         //
+        // return 'edit';
+        $data = [];
+        $order = TOrder::where('code_order', $id)->first();
+
+        $datas = TOrderDetail::where('order_id', $order->id)->get();
+
+        return view('t_nota.t_nota_edit', compact('data', 'datas', 'order'));
     }
 
     /**
@@ -158,6 +165,29 @@ class TNotaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $orderDetail = TOrderDetail::find($id);
+
+        if (!$orderDetail) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        $code = $orderDetail->code_order;
+        $orderID = $orderDetail->order_id;
+        $totalHarga = $orderDetail->qty_order * $orderDetail->price_menu;
+
+        $order = TOrder::find($orderID);
+        
+        $order->total_price -= $totalHarga;
+        $order->total_item  -= 1;
+        $order->save();
+
+        $orderDetail->delete();
+
+        if (!$code) {
+            return redirect()->back()->with('error', 'Kode order tidak ditemukan.');
+        }
+
+        return redirect()->route('nota.edit', ['id' => $code])
+            ->with('success', 'Data berhasil dihapus.');
     }
 }
