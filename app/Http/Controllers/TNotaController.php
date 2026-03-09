@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\TOrderDetail;
 use App\Models\TOrder;
 use App\Models\TMenu;
+use App\Models\MPayment;
+use App\Models\TSale;
 use Illuminate\Support\Facades\Auth;
 
 class TNotaController extends Controller
@@ -25,21 +27,26 @@ class TNotaController extends Controller
         //
         $datas = TOrder::where('code_order', $id)->get();
         $order = TOrder::where('code_order', $id)->first();
+        // $payment = MPayment::where('id','5')->orWhere('id','6')->get();
+        $payment = MPayment::whereIn('id', [5, 6])->get();
 
         if (!$order) {
             abort(404, 'Order tidak ditemukan');
         }
 
+        $statusNota = $order->t_sale->status_sale ?? 'unpaid';
+        
         $hargaSubtotal = $order->total_price;
         $taxHarga = 0.0 * $hargaSubtotal;
         $hargaTotal = $hargaSubtotal + $taxHarga;
+        $totalShop = $hargaTotal;
         $dataBaru = TOrderDetail::where('order_id', $order->id)->get();
         $hargaTotal = 'Rp. ' . number_format($hargaTotal, 0, ',', '.');
         // return $dataBaru;
         $menu = TMenu::all();
         $nota_id = $id;
 
-        return view('t_nota.t_nota_detail', compact('datas','dataBaru','hargaSubtotal','taxHarga','hargaTotal','menu','nota_id'));
+        return view('t_nota.t_nota_detail', compact('datas','dataBaru','hargaSubtotal','taxHarga','hargaTotal','menu','nota_id','payment','totalShop', 'statusNota', 'order'));
     }
 
     public function filter(Request $request)
@@ -189,5 +196,56 @@ class TNotaController extends Controller
 
         return redirect()->route('nota.edit', ['id' => $code])
             ->with('success', 'Data berhasil dihapus.');
+    }
+
+    public function payment(Request $request, $order_id)
+    {
+        $validated = $request->validate([
+            // 'order_id' => 'required',
+            'payment_id' => 'required',
+            'paid_sale' => 'required',
+            // 'subtotal_sale' => 'required|numeric',
+            // 'tax_sale' => 'required|numeric',
+            // 'discount_sale' => 'required|numeric',
+            // 'total_sale' => 'required|numeric',
+            // 'paid_sale' => 'required|numeric',
+            'change_sale' => 'required',
+            // 'status_sale' => 'required',
+            // 'note_sale' => 'nullable',
+
+            // 'is_active' => 'required|in:Y,N'
+        ]);
+        $paid_sale = $validated['paid_sale'];
+        // Ambil satu order berdasarkan code_order
+        $order = TOrder::where('code_order', $order_id)->firstOrFail();
+
+        // Contoh perhitungan pajak (misalnya 11%)
+        $tax = $order->total_price * 0;
+        
+        TSale::create([
+            'order_id'      => $order->id,
+            'payment_id'    => $validated['payment_id'],
+            'subtotal_sale' => $order->total_price,
+            'tax_sale'      => $tax,
+            'total_sale'    => $order->total_price + $tax,
+            'paid_sale'     => $paid_sale,
+            'change_sale'   => $validated['change_sale'] + $tax,
+            'status_sale'   => 'paid',
+        ]);
+
+        // $data = TOrder::where('code_order', $order_id)->get();
+        // TSale::create([
+        //     'payment_id' => $order_id,
+        //     'subtotal_sale' => $data->subtotal_sale,
+        //     'tax_sale' => perbaiki
+        // ]);
+
+        return redirect()->back();
+
+        // return $data;
+
+        // TSale::create($validated);
+
+        return view('t_nota.t_nota_payment');
     }
 }

@@ -67,8 +67,11 @@
       <div class="card border-left-info shadow h-100 py-2">
         <div class="card-body">
           <div class="row">
+            
             <div class="col-12">
-              <div class="font-weight-bold text-info mb-1">{{ $data->code_order ?? '-' }}</div>
+              <div class="font-weight-bold text-info mb-1">
+                {{ $data->code_order ?? '-' }}
+              </div>
             </div>
 
             <div class="col-7">
@@ -81,6 +84,15 @@
               <div class="mt-2">
                 {{ $data->total_item ?? '-' }} item
               </div>
+            </div>
+
+            {{-- STATUS PEMBAYARAN --}}
+            <div class="col-12 mt-2">
+              @if($data->t_sale?->status_sale == 'paid')
+                  <span class="badge badge-success">Lunas</span>
+              @else
+                  <span class="badge badge-danger">Belum Bayar</span>
+              @endif
             </div>
 
           </div>

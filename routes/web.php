@@ -93,6 +93,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/sale/pilih-tanggal', [TSaleController::class, 'pilihTanggal'])->name('t_sale.pilih');
     Route::post('/sale/store', [TSaleController::class, 'store'])->name('t_sale.store');
     Route::get('/sale/list/{date}', [TSaleController::class, 'listByDate'])->name('t_sale.list');
+    Route::get('/sale', [TSaleController::class, 'index'])->name('sale.index');
+    Route::get('/sale/create', [TSaleController::class, 'create'])->name('sale.create');
+    Route::post('/sale/store', [TSaleController::class, 'store'])->name('sale.store');
+    Route::get('/sale/{id}/edit', [TSaleController::class, 'edit'])->name('sale.edit');
+    Route::put('/sale/{id}/update', [TSaleController::class, 'update'])->name('sale.update');
+    Route::delete('/sale/{id}/destroy', [TSaleController::class, 'destroy'])->name('sale.destroy');
 
     Route::get('/t_order/pilih-tanggal', [TOrderOldController::class, 'pilihTanggal'])->name('t_order.pilih');
     Route::get('/t_order/list/{date}', [TOrderOldController::class, 'listByDate'])->name('t_order.list');
@@ -154,6 +160,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/nota/{id}/edit', [TNotaController::class, 'edit'])->name('nota.edit');
     Route::put('/nota/{id}/update', [TNotaController::class, 'update'])->name('nota.update');
     Route::delete('/nota/{id}/destroy', [TNotaController::class, 'destroy'])->name('nota.destroy');
+    Route::post('/nota/{order_id}/payment', [TNotaController::class, 'payment'])->name('nota.payment');
 });
 
 // old

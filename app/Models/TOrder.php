@@ -35,4 +35,9 @@ class TOrder extends Model
     {
         return $this->belongsTo(TMenu::class, 'menu_id');
     }
+
+    public function t_sale()
+    {
+        return $this->hasOne(TSale::class, 'order_id');
+    }
 }

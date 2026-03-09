@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TSale;
+use App\Models\TOrder;
+use App\Models\MPayment;
 use App\Models\TTemporder;
 use App\Models\TMenu;
 use App\Models\TDebit;
@@ -18,6 +20,8 @@ class TSaleController extends Controller
     public function index()
     {
         //
+        $datas = TSale::all();
+        return view('t_sale.t_sale', compact('datas'));
     }
 
     /**
@@ -26,12 +30,37 @@ class TSaleController extends Controller
     public function create()
     {
         //
+        $order = TOrder::all();
+        $payment = MPayment::all();
+        return view('t_sale.t_sale_create', compact('order','payment'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'order_id' => 'required',
+            'payment_id' => 'required',
+            'subtotal_sale' => 'required|numeric',
+            'tax_sale' => 'required|numeric',
+            'discount_sale' => 'required|numeric',
+            'total_sale' => 'required|numeric',
+            'paid_sale' => 'required|numeric',
+            'change_sale' => 'required|numeric',
+            'status_sale' => 'required',
+            'note_sale' => 'nullable',
+            // 'is_active' => 'required|in:Y,N'
+        ]);
+
+        TSale::create($validated);
+
+        return redirect()->route('sale.index')
+            ->with('success','Data berhasil disimpan');
+    }
+
+    public function store_old(Request $request)
     {
         //
         // return Auth::user()->name;
@@ -113,14 +142,38 @@ class TSaleController extends Controller
     public function edit(string $id)
     {
         //
+        $data = TSale::findOrFail($id);
+        return view('t_sale.t_sale_edit', compact('data'));
+        // return view('t_sale.t_sale_edit', compact('order','payment'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Validasi
+        $validated = $request->validate([
+            'order_id' => 'required|string',
+            'payment_id' => 'required|string',
+            'subtotal_sale' => 'required|numeric',
+            'tax_sale' => 'required|numeric',
+            'discount_sale' => 'required|numeric',
+            'total_sale' => 'required|numeric',
+            'paid_sale' => 'required|numeric',
+            'change_sale' => 'required|numeric',
+            'status_sale' => 'required|string',
+            'note_sale' => 'nullable|string',
+        ]);
+
+        // Cari data berdasarkan ID
+        $sale = TSale::findOrFail($id);
+
+        // Update data
+        $sale->update($validated);
+
+        return redirect()->route('sale.index')
+            ->with('success', 'Data sale berhasil diperbarui.');
     }
 
     /**
@@ -129,6 +182,9 @@ class TSaleController extends Controller
     public function destroy(string $id)
     {
         //
+        $id = TSale::find($id);
+        $id->delete();
+        return redirect()->route('sale.index')->with('success', 'Data berhasil dihapus.');
     }
 
     public function pilihTanggal()
