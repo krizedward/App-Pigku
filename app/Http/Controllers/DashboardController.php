@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TExpense;
 use App\Models\TOrder;
 use App\Models\TOrderOld;
+use App\Models\TOrderDetail;
 use App\Models\TSale;
 use App\Models\TDebit;
 use App\Models\TKredit;
@@ -133,24 +134,76 @@ class DashboardController extends Controller
         $IdPertusuk = [3,4];
             
         // jumlah total order sate
-        $totalJumlah = TOrderOld::whereIn('menu_id', $menuIds)
+        // $totalJumlahBaru [versi 0.5.x]
+        $totalJumlahBaru = TOrderDetail::join('t_order', 't_order_detail.order_id', '=', 't_order.id')
+            ->whereMonth('t_order.date_order', $bulan)
+            ->whereYear('t_order.date_order', $tahun)
+            ->where('unit_menu','=','porsi')
+            ->sum('t_order_detail.qty_order');
+        
+        $totalJumlahLama = TOrderOld::whereIn('menu_id', $menuIds)
             ->whereMonth('date_order', $bulan)
             ->whereYear('date_order', $tahun)
             ->sum('qty_order');
+        
+        $totalJumlah = $totalJumlahBaru + $totalJumlahLama;
+        
+        // return  $totalJumlah;
             
         // jumlah total per tusuk
-        $totalPertusuk = TOrderOld::whereIn('menu_id', $IdPertusuk)
+        // $totalPertusukBaru [versi 0.5.x]
+        $totalPertusukBaru = TOrderDetail::join('t_order', 't_order_detail.order_id', '=', 't_order.id')
+            ->whereMonth('t_order.date_order', $bulan)
+            ->whereYear('t_order.date_order', $tahun)
+            ->where('unit_menu','=','tusuk')
+            ->sum('t_order_detail.qty_order');
+        
+        $totalPertusukLama = TOrderOld::whereIn('menu_id', $IdPertusuk)
             ->whereMonth('date_order', $bulan)
             ->whereYear('date_order', $tahun)
             ->sum('qty_order');
+        
+        $totalPertusuk = $totalPertusukBaru + $totalPertusukLama;
+        
+        // return  $totalPertusukBaru;
 
         // Ambil total order per tanggal
-        $orders = TOrderOld::select('date_order', \DB::raw('SUM(total_price) as total'))
+        // $ordersBaru [versi 0.5.x]
+        // $ordersBaru = TOrderDetail::join('t_order', 't_order_detail.order_id', '=', 't_order.id')
+        //     ->select('t_order.date_order', \DB::raw('SUM(total_price) as total'))
+        //     ->whereMonth('t_order.date_order', $bulan)
+        //     ->whereYear('t_order.date_order', $tahun)
+        //     ->groupBy('date_order')
+        //     ->pluck('total', 'date_order');
+        
+        $ordersBaru = TOrder::select('date_order', \DB::raw('SUM(total_price) as total'))
             ->whereMonth('date_order', $bulan)
             ->whereYear('date_order', $tahun)
             ->groupBy('date_order')
             ->pluck('total', 'date_order');
-            
+
+        $ordersLama = TOrderOld::select('date_order', \DB::raw('SUM(total_price) as total'))
+            ->whereMonth('date_order', $bulan)
+            ->whereYear('date_order', $tahun)
+            ->groupBy('date_order')
+            ->pluck('total', 'date_order');
+        
+        // return $ordersLama;
+        
+        if($ordersLama != null) {
+            $orders = $ordersBaru->merge($ordersLama)
+                ->groupBy(function ($value, $key) {
+                    return $key;
+                })
+                ->map(function ($items) {
+                    return $items->sum();
+                });
+        } else {
+            $orders = $ordersBaru;
+        }
+        
+        // return $orders;
+
         // $orders = TSale::select('date_order', \DB::raw('SUM(total_price) as total'))
         //     ->whereMonth('date_order', $bulan)
         //     ->whereYear('date_order', $tahun)
@@ -184,9 +237,15 @@ class DashboardController extends Controller
         }
 
         // Hitung total pendapatan
-        $totalPendapatan = TDebit::whereMonth('date_debit', $bulan)
+        $totalPendapatanBaru = TOrder::whereMonth('date_order', $bulan)
+            ->whereYear('date_order', $tahun)
+            ->sum('total_price');
+        
+        $totalPendapatanLama = TDebit::whereMonth('date_debit', $bulan)
             ->whereYear('date_debit', $tahun)
             ->sum('amount_debit');
+        
+        $totalPendapatan = $totalPendapatanBaru + $totalPendapatanLama;
 
         // Hitung total pengeluaran
         $totalPengeluaran = TKredit::whereMonth('date_kredit', $bulan)
@@ -229,7 +288,16 @@ class DashboardController extends Controller
             $dates = $dates_2_role;
         }
 
+        $dataAreaChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $dataBarChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $dataPieDemo = [1, 1, 1];
+
         return view('dashboard.main', compact(
+            // baru
+            'dataAreaChart',
+            'dataBarChart',
+            'dataPieDemo',
+            // parameter lama
             'text',
             'dates',
             'totalPendapatan',
