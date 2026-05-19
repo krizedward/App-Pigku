@@ -5,7 +5,7 @@
 @section('content')
 <div class="row align-items-center mb-4">
   <div class="col">
-    <h1 class="h3 mb-0 text-gray-800">Create Edward @yield('title')</h1>
+    <h1 class="h3 mb-0 text-gray-800">Create @yield('title')</h1>
   </div>
 </div>
 

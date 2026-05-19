@@ -28,99 +28,99 @@ class DashboardController extends Controller
         $date = Carbon::today();
         $text = ""; // Default kosong
 
-        if ($roleId == 2) {
+        // if ($roleId == 2) {
             
-            // Format tanggal
-            $date_today = Carbon::parse($date)->locale('id')->translatedFormat('l, j F Y');
+        //     // Format tanggal
+        //     $date_today = Carbon::parse($date)->locale('id')->translatedFormat('l, j F Y');
 
-            // Ambil data penjualan
-            $orders = TOrderOld::with('t_menu')->where('date_order', $date)->get();
+        //     // Ambil data penjualan
+        //     $orders = TOrderOld::with('t_menu')->where('date_order', $date)->get();
 
-            // Buat daftar detail + hitung total
-            $pemasukanList = "";
-            $totalSales = 0;
+        //     // Buat daftar detail + hitung total
+        //     $pemasukanList = "";
+        //     $totalSales = 0;
 
-            foreach ($orders as $order) {
-                $itemTotal = $order->qty_order * $order->t_menu->price_menu;
-                $totalSales += $itemTotal;
-                $formattedValue = number_format($itemTotal, 0, ',', '.');
+        //     foreach ($orders as $order) {
+        //         $itemTotal = $order->qty_order * $order->t_menu->price_menu;
+        //         $totalSales += $itemTotal;
+        //         $formattedValue = number_format($itemTotal, 0, ',', '.');
 
-                $pemasukanList .= "- {$order->t_menu->name_menu} : {$order->qty_order} × Rp " . number_format($order->t_menu->price_menu, 0, ',', '.') . " = Rp $formattedValue\n";
-            }
+        //         $pemasukanList .= "- {$order->t_menu->name_menu} : {$order->qty_order} × Rp " . number_format($order->t_menu->price_menu, 0, ',', '.') . " = Rp $formattedValue\n";
+        //     }
 
-            // Ambil data pengeluaran
-            $expenses = TExpense::where('date_expense', $date)->get();
+        //     // Ambil data pengeluaran
+        //     $expenses = TExpense::where('date_expense', $date)->get();
 
-            $pengeluaranList = "";
-            $totalExpense = 0;
+        //     $pengeluaranList = "";
+        //     $totalExpense = 0;
 
-            foreach ($expenses as $expense) {
-                $totalExpense += $expense->total_price;
-                $pengeluaranList .= "- {$expense->description_expense} : Rp " . number_format($expense->total_price, 0, ',', '.') . "\n";
-            }
+        //     foreach ($expenses as $expense) {
+        //         $totalExpense += $expense->total_price;
+        //         $pengeluaranList .= "- {$expense->description_expense} : Rp " . number_format($expense->total_price, 0, ',', '.') . "\n";
+        //     }
 
-            // Hitung Laba
-            $labaKotor = $totalSales - $totalExpense;
+        //     // Hitung Laba
+        //     $labaKotor = $totalSales - $totalExpense;
 
-            // format
-            $totalSalesFormat = number_format($totalSales, 0, ',', '.');
-            $totalExpenseFormat = number_format($totalExpense, 0, ',', '.');
-            $labaKotorFormat = number_format($labaKotor, 0, ',', '.');
+        //     // format
+        //     $totalSalesFormat = number_format($totalSales, 0, ',', '.');
+        //     $totalExpenseFormat = number_format($totalExpense, 0, ',', '.');
+        //     $labaKotorFormat = number_format($labaKotor, 0, ',', '.');
 
-            // Buat final laporan
-            $text = <<<EOD
-            $date_today
+        //     // Buat final laporan
+        //     $text = <<<EOD
+        //     $date_today
 
-            ==== PENJUALAN ====
-            $pemasukanList
-            Total Penjualan: Rp. $totalSalesFormat
+        //     ==== PENJUALAN ====
+        //     $pemasukanList
+        //     Total Penjualan: Rp. $totalSalesFormat
 
-            ==== PENGELUARAN ====
-            $pengeluaranList
-            Total Pengeluaran: Rp. $totalExpenseFormat
+        //     ==== PENGELUARAN ====
+        //     $pengeluaranList
+        //     Total Pengeluaran: Rp. $totalExpenseFormat
 
-            ==== RINGKASAN ====\n
-            Laba Kotor: Rp $labaKotorFormat
+        //     ==== RINGKASAN ====\n
+        //     Laba Kotor: Rp $labaKotorFormat
 
-            EOD;
+        //     EOD;
 
-            // ambil input bulan & tahun (jika ada), kalau tidak ada default ke hari ini
-            $bulan = $request->input('bulan', Carbon::today()->month);
-            $tahun = $request->input('tahun', Carbon::today()->year);
+        //     // ambil input bulan & tahun (jika ada), kalau tidak ada default ke hari ini
+        //     $bulan = $request->input('bulan', Carbon::today()->month);
+        //     $tahun = $request->input('tahun', Carbon::today()->year);
 
-            // Ambil total order per tanggal
-            $orders = TOrderOld::select('date_order', \DB::raw('SUM(total_price) as total'))
-                ->whereMonth('date_order', $bulan)
-                ->whereYear('date_order', $tahun)
-                ->groupBy('date_order')
-                ->pluck('total', 'date_order');
+        //     // Ambil total order per tanggal
+        //     $orders = TOrderOld::select('date_order', \DB::raw('SUM(total_price) as total'))
+        //         ->whereMonth('date_order', $bulan)
+        //         ->whereYear('date_order', $tahun)
+        //         ->groupBy('date_order')
+        //         ->pluck('total', 'date_order');
 
-            // Ambil total expense per tanggal
-            $expenses = TExpense::select('date_expense', \DB::raw('SUM(total_price) as total'))
-                ->whereMonth('date_expense', $bulan)
-                ->whereYear('date_expense', $tahun)
-                ->groupBy('date_expense')
-                ->pluck('total', 'date_expense');
+        //     // Ambil total expense per tanggal
+        //     $expenses = TExpense::select('date_expense', \DB::raw('SUM(total_price) as total'))
+        //         ->whereMonth('date_expense', $bulan)
+        //         ->whereYear('date_expense', $tahun)
+        //         ->groupBy('date_expense')
+        //         ->pluck('total', 'date_expense');
 
-            // Hanya tampilkan data untuk hari ini saja
-            $today = Carbon::today()->toDateString();
+        //     // Hanya tampilkan data untuk hari ini saja
+        //     $today = Carbon::today()->toDateString();
 
-            $dates_2_role = [[
-                'date'    => $today,
-                'order'   => $orders[$today] ?? 0,
-                'expense' => $expenses[$today] ?? 0,
-            ]];
+        //     $dates_2_role = [[
+        //         'date'    => $today,
+        //         'order'   => $orders[$today] ?? 0,
+        //         'expense' => $expenses[$today] ?? 0,
+        //     ]];
 
-            // $saldoPerusahaan = 0;
-            // $totalJumlah = 0;
-            // $totalPertusuk = 0;
-            // $totalBalance = 0;
-            // $totalPendapatan = 0;
-            // $totalPengeluaran = 0;
+        //     // $saldoPerusahaan = 0;
+        //     // $totalJumlah = 0;
+        //     // $totalPertusuk = 0;
+        //     // $totalBalance = 0;
+        //     // $totalPendapatan = 0;
+        //     // $totalPengeluaran = 0;
 
-            // return view('dashboard.main', compact('text','dates', 'saldoPerusahaan','totalJumlah','totalPertusuk','totalBalance','totalPendapatan','totalPengeluaran'));
+        //     // return view('dashboard.main', compact('text','dates', 'saldoPerusahaan','totalJumlah','totalPertusuk','totalBalance','totalPendapatan','totalPengeluaran'));
 
-        } 
+        // } 
         
         // ambil input bulan & tahun (jika ada), kalau tidak ada default ke hari ini
         $bulan = $request->input('bulan', Carbon::today()->month);
@@ -130,8 +130,8 @@ class DashboardController extends Controller
         $prevMonth = Carbon::create($tahun, $bulan, 1)->subMonth();
         $bulanLalu = $prevMonth->month;
         $tahunLalu = $prevMonth->year;
-        $menuIds = [1,5,6,7,8,9,10];
-        $IdPertusuk = [3,4];
+        $menuIds = [1,5,6,7,8,9,10,18,19,20,23,24,25,26,27,28,36,37,38];
+        $IdPertusuk = [3,4,21,22];
             
         // jumlah total order sate
         // $totalJumlahBaru [versi 0.5.x]
@@ -284,9 +284,9 @@ class DashboardController extends Controller
         }
 
         // merubah dates untuk ubah data dates
-        if($roleId == 2){
-            $dates = $dates_2_role;
-        }
+        // if($roleId == 2){
+        //     $dates = $dates_2_role;
+        // }
 
         $dataAreaChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         $dataBarChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

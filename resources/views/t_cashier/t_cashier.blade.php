@@ -87,7 +87,10 @@
         <form id="order-form" action="{{ route('cashier.store') }}" method="POST">
           @csrf
           <input type="hidden" name="type_form" value="cashier">
-          <input type="hidden" name="date_form" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+          <div class="form-group">
+            <label for="date_order">Tanggal Order</label>
+            <input type="date" id="date_order" class="form-control mb-3" name="date_form" required>
+          </div>
 
           <div class="table-responsive">
             <table class="table table-sm table-bordered table-striped align-middle">
@@ -487,5 +490,27 @@
       }
     }
   });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("date_order");
+
+  // ambil dari localStorage
+  let savedDate = localStorage.getItem("date_order");
+
+  if (savedDate) {
+      input.value = savedDate;
+  } else {
+      // fallback ke hari ini
+      let today = new Date().toISOString().split("T")[0];
+      input.value = today;
+  }
+
+  // simpan saat berubah
+  input.addEventListener("change", function () {
+      localStorage.setItem("date_order", input.value);
+  });
+});
 </script>
 @endsection

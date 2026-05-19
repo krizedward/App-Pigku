@@ -11,6 +11,15 @@
       <h1 class="h3 mb-0 text-gray-800">@yield('title')</h1>
     </div>
   </div>
+  
+  <!-- <div class="row" id="loadingSection">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+            <div class="spinner-border text-primary mt-3" role="status"></div>
+            <p class="my-3">Loading Data</p>
+        </div>
+    </div>
+  </div> -->
 
   <!-- filter tanggal -->
   <div class="row">
@@ -160,7 +169,7 @@
               </thead>
               <tbody id="event-table-body">
                 @foreach($dates as $d)
-                <tr onclick="window.location='{{ route('t_order.list', $d['date']) }}'" style="cursor:pointer;">
+                <tr onclick="window.location.href='{{ route('nota.filter', ['tanggal_awal' => $d['date'], 'tanggal_akhir' => $d['date']]) }}'" style="cursor:pointer;">
                   <td>{{ \Carbon\Carbon::parse($d['date'])->format('d-m-Y') }}</td>
                   <td>Rp. {{ number_format($d['order'], 0, ',', '.') }}</td>
                 </tr>
@@ -908,6 +917,7 @@
     </div>
   </div>
 
+  {{-- 
   <!-- Content Row -->
   <div class="row">
 
@@ -930,7 +940,7 @@
               </thead>
               <tbody id="event-table-body">
                 @foreach($dates as $d)
-                <tr onclick="window.location='{{ route('t_order.list', $d['date']) }}'" style="cursor:pointer;">
+                <tr onclick="window.location.href='{{ route('nota.filter', ['tanggal_awal' => $d['date'], 'tanggal_akhir' => $d['date']]) }}'" style="cursor:pointer;">
                   <td>{{ \Carbon\Carbon::parse($d['date'])->format('d-m-Y') }}</td>
                   <td>Rp. {{ number_format($d['order'], 0, ',', '.') }}</td>
                 </tr>
@@ -991,7 +1001,128 @@
 
     </div>
   </div>
-  
+  --}}
+
+  <!-- Model Dashboard Role 1 -->
+  <!-- list tanggal -->
+  <div class="row">
+    <div class="col-xl-6 col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">List Tanggal Order</h6>
+          <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+              <div class="dropdown-header">Showed:</div>
+              <a class="dropdown-item" id="size-event-table" href="#">5</a>
+              <a class="dropdown-item" id="size-event-table" href="#">10</a>
+              <a class="dropdown-item" id="size-event-table" href="#">20</a>
+              <a class="dropdown-item" id="size-event-table" href="#">100</a>
+              <!-- <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#">Download</a> -->
+            </div>
+          </div>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table-responsive my-2">
+            <table class="table table-striped table-bordered mb-0" id="event-table" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th style="vertical-align: middle;">Tanggal</th>
+                  <th style="vertical-align: middle;">Nominal</th>
+                </tr>
+              </thead>
+              <tbody id="event-table-body">
+                @foreach($dates as $d)
+                <tr onclick="window.location.href='{{ route('nota.filter', ['tanggal_awal' => $d['date'], 'tanggal_akhir' => $d['date']]) }}'" style="cursor:pointer;">
+                  <td>{{ \Carbon\Carbon::parse($d['date'])->format('d-m-Y') }}</td>
+                  <td>Rp. {{ number_format($d['order'], 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+
+              </tbody>
+            </table>
+          </div>
+          {{--
+          <div class="row align-items-center">
+            <div class="col">
+              <div class="mt-2">Showing page <a class="badge badge-primary" id="current-paging"></a></div>
+            </div>
+            <div class="col-auto ms-auto">
+              <div class="btn-group mt-2 mb-2 mb-sm-0" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" id="previous-page-event-table">Previous</button>
+                <button type="button" class="btn btn-primary" id="next-page-event-table">Next</button>
+              </div>
+            </div>
+          </div>
+          --}}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">List Tanggal Pengeluaran</h6>
+          <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+              <div class="dropdown-header">Showed:</div>
+              <a class="dropdown-item" id="size-event-table" href="#">5</a>
+              <a class="dropdown-item" id="size-event-table" href="#">10</a>
+              <a class="dropdown-item" id="size-event-table" href="#">20</a>
+              <a class="dropdown-item" id="size-event-table" href="#">100</a>
+              <!-- <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#">Download</a> -->
+            </div>
+          </div>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="table-responsive my-2">
+            <table class="table table-striped table-bordered mb-0" id="event-table" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th style="vertical-align: middle;">Tanggal</th>
+                  <th style="vertical-align: middle;">Nominal</th>
+                </tr>
+              </thead>
+              <tbody id="event-table-body">
+                @foreach($dates as $d)
+                <tr onclick="window.location='{{ route('expense.list', $d['date']) }}'" style="cursor:pointer;">
+                  <td>{{ \Carbon\Carbon::parse($d['date'])->format('d-m-Y') }}</td>
+                  <td>Rp. {{ number_format($d['expense'], 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+
+              </tbody>
+            </table>
+          </div>
+          {{--
+          <div class="row align-items-center">
+            <div class="col">
+              <div class="mt-2">Showing page <a class="badge badge-primary" id="current-paging"></a></div>
+            </div>
+            <div class="col-auto ms-auto">
+              <div class="btn-group mt-2 mb-2 mb-sm-0" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" id="previous-page-event-table">Previous</button>
+                <button type="button" class="btn btn-primary" id="next-page-event-table">Next</button>
+              </div>
+            </div>
+          </div>
+          --}}
+        </div>
+      </div>
+    </div>
+
+  </div>
 
   {{--
   <!-- Content Row -->
@@ -1084,9 +1215,10 @@
   </script>
 @endif
 @endsection
-
+{{-- 
 <!-- catatan tambah -->
 <!-- <tr onclick="window.location='{{ route('nota.filter', [
     'tanggal_awal' => $d['date'],
     'tanggal_akhir' => $d['date']
 ]) }}'" style="cursor:pointer;"> -->
+--}}

@@ -44,7 +44,8 @@ class TCashierController extends Controller
                 ->get();
         }
         
-        $paket_product = TMenu::whereIn('id', $menuIdInPaket)->get();
+        // array untuk menampilkan data
+        $paket_product = TMenu::whereIn('id', $menuIdInPaket)->where('is_active', 'Y')->get();
         $datas = TMenu::all();
         $user = Auth::user()->name;
         $temp_order = TTemporder::all();
@@ -78,9 +79,9 @@ class TCashierController extends Controller
             'orders.*.subtotal_price'=> 'required|integer',
         ]);
         
-        $menuIds = [1,5,6,7,8,9,10,18,19,20];
-        $IdPertusuk = [3,4];
-        $IdPerGelas = [2,11,12,13,14,15,16,17];
+        $menuIds = [1,5,6,7,8,9,10,18,19,20,23,24,25,26,27,28,36,37,38];
+        $IdPertusuk = [3,4,21,22];
+        $IdPerGelas = [2,11,12,13,14,15,16,17,36,37,38];
         $grandTotal = 0;   // variabel penampung 
         $totalItem  = 0;
         $lastDate   = null;
@@ -138,7 +139,8 @@ class TCashierController extends Controller
             }
 
             if(!$type_additional) {
-                throw new \Exception('Menu tidak terdaftar additional');
+                // throw new \Exception('Menu tidak terdaftar additional');
+                throw new \Exception("Menu dengan ID {$menu->id} ({$menu->name}) tidak terdaftar sebagai additional");
             }
 
             $order_detail_id = TOrderDetail::create([
