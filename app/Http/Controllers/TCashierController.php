@@ -86,8 +86,11 @@ class TCashierController extends Controller
         $lastDate   = null;
         // $tanggal = $request->date_form;
         $user = Auth::user()->name;
+        $fullname = Auth::user()->t_pengguna->fullname_pengguna;
         $tanggal = Carbon::parse($request->date_form);
         $dateFormat = $tanggal->format('ymd'); // 260129
+
+        $now = Carbon::now('Asia/Jakarta');
 
         // Ambil order terakhir di tanggal yang sama
         $lastOrder = TOrder::whereDate('date_order', $tanggal)
@@ -111,9 +114,11 @@ class TCashierController extends Controller
         $order = TOrder::create([
             'code_order'   => $codeOrder,
             'date_order'   => $tanggal,
+            'time_order'   => $now->toTimeString(),
             'total_item'   => '0',
             'total_price'  => '0',
             'note_order'   => '',
+            'cashier_name' => $fullname,
             'create_by'    => $user,
             'update_by'    => $user,
         ]);
@@ -184,10 +189,7 @@ class TCashierController extends Controller
 
 
 
-        return redirect()->route('nota.filter', [
-            'tanggal_awal'  => $tanggal,
-            'tanggal_akhir' => $tanggal,
-        ])->with('success', 'Semua order berhasil disimpan!');
+        return redirect()->route('nota.detail',['id' => $order->code_order])->with('success', 'Semua order berhasil disimpan!');
         
         // if ($request->type_form === 'list_form') {
         //     return redirect()

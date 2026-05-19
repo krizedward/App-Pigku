@@ -18,9 +18,11 @@ class TOrder extends Model
     protected $fillable = [
         'code_order',
         'date_order',
+        'time_order',
         'total_item',
         'total_price',
         'note_order',
+        'cashier_name',
         'create_by',
         'update_by',
     ];
@@ -32,5 +34,10 @@ class TOrder extends Model
     public function t_menu()
     {
         return $this->belongsTo(TMenu::class, 'menu_id');
+    }
+
+    public function t_sale()
+    {
+        return $this->hasOne(TSale::class, 'order_id');
     }
 }

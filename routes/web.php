@@ -3,7 +3,7 @@
 use App\Http\Controllers\TSaldoController;
 use App\Http\Controllers\TIncomeController;
 use App\Http\Controllers\TTemporderController;
-use App\Http\Controllers\TTempExpenseController;
+use App\Http\Controllers\TTempexpenseController;
 use App\Http\Controllers\TExpenseController;
 use App\Http\Controllers\TOrderController;
 use App\Http\Controllers\TMenuController;
@@ -93,6 +93,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/sale/pilih-tanggal', [TSaleController::class, 'pilihTanggal'])->name('t_sale.pilih');
     Route::post('/sale/store', [TSaleController::class, 'store'])->name('t_sale.store');
     Route::get('/sale/list/{date}', [TSaleController::class, 'listByDate'])->name('t_sale.list');
+    Route::get('/sale', [TSaleController::class, 'index'])->name('sale.index');
+    Route::get('/sale/create', [TSaleController::class, 'create'])->name('sale.create');
+    Route::post('/sale/store', [TSaleController::class, 'store'])->name('sale.store');
+    Route::get('/sale/{id}/edit', [TSaleController::class, 'edit'])->name('sale.edit');
+    Route::put('/sale/{id}/update', [TSaleController::class, 'update'])->name('sale.update');
+    Route::delete('/sale/{id}/destroy', [TSaleController::class, 'destroy'])->name('sale.destroy');
 
     Route::get('/t_order/pilih-tanggal', [TOrderOldController::class, 'pilihTanggal'])->name('t_order.pilih');
     Route::get('/t_order/list/{date}', [TOrderOldController::class, 'listByDate'])->name('t_order.list');
@@ -112,8 +118,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/list/pengeluaran/{date}', [TExpenseController::class, 'listByDate'])->name('expense.list');
     Route::get('/list/pengeluaran/{date}/create', [TExpenseController::class, 'listCreate'])->name('expense.list.create');
 
-    Route::post('/temp-expense/store', [TTempExpenseController::class, 'store'])->name('tempexpense.store');
-    Route::delete('/temp-expense/{id}/destroy', [TTempExpenseController::class, 'destroy'])->name('tempexpense.destroy');
+    Route::post('/temp-expense/store', [TTempexpenseController::class, 'store'])->name('tempexpense.store');
+    Route::delete('/temp-expense/{id}/destroy', [TTempexpenseController::class, 'destroy'])->name('tempexpense.destroy');
 
     Route::get('/income', [TIncomeController::class, 'index'])->name('income.index');
     Route::get('/income/create', [TIncomeController::class, 'create'])->name('income.create');
@@ -151,6 +157,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/nota', [TNotaController::class, 'index'])->name('nota.index');
     Route::get('/nota/{id}/detail', [TNotaController::class, 'detail'])->name('nota.detail');
     Route::get('/nota/filter', [TNotaController::class, 'filter'])->name('nota.filter');
+    Route::get('/nota/{id}/edit', [TNotaController::class, 'edit'])->name('nota.edit');
+    Route::put('/nota/{id}/update', [TNotaController::class, 'update'])->name('nota.update');
+    Route::delete('/nota/{id}/destroy', [TNotaController::class, 'destroy'])->name('nota.destroy');
+    Route::post('/nota/{order_id}/payment', [TNotaController::class, 'payment'])->name('nota.payment');
 });
 
 // old
