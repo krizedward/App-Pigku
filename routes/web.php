@@ -22,6 +22,8 @@ use App\Http\Controllers\TSaleController;
 use App\Http\Controllers\TCashierController;
 use App\Http\Controllers\TOrderOldController;
 use App\Http\Controllers\TNotaController;
+use App\Http\Controllers\MBarangController;
+use App\Http\Controllers\MSatuanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/welcome', function () {
@@ -161,6 +163,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/nota/{id}/update', [TNotaController::class, 'update'])->name('nota.update');
     Route::delete('/nota/{id}/destroy', [TNotaController::class, 'destroy'])->name('nota.destroy');
     Route::post('/nota/{order_id}/payment', [TNotaController::class, 'payment'])->name('nota.payment');
+
+    // master barang
+    Route::get('/master-barang', [MBarangController::class, 'index'])->name('master-barang.index');
+    Route::get('/master-barang/create', [MBarangController::class, 'create'])->name('master-barang.create');
+    Route::get('/master-barang/{id}/edit', [MBarangController::class, 'edit'])->name('master-barang.edit');
+    Route::put('/master-barang/{id}/update', [MBarangController::class, 'update'])->name('master-barang.update');
+    Route::post('/master-barang/store', [MBarangController::class, 'store'])->name('master-barang.store');
+    Route::delete('/master-barang/{id}/destroy', [MBarangController::class, 'destroy'])->name('master-barang.destroy');
+
+    // master satuan
+    Route::get('/master-satuan', [MSatuanController::class, 'index'])->name('master-satuan.index');
+    Route::get('/master-satuan/create', [MSatuanController::class, 'create'])->name('master-satuan.create');
+    Route::post('/master-satuan/store', [MSatuanController::class, 'store'])->name('master-satuan.store');
+    Route::delete('/master-satuan/{id}/destroy', [MSatuanController::class, 'destroy'])->name('master-satuan.destroy');
 });
 
 // old

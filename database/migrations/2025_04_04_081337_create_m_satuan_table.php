@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_barang', function (Blueprint $table) {
+        Schema::create('m_satuan', function (Blueprint $table) {
             $table->id();
-            $table->string('name_barang');
-            $table->foreignId('satuan_id')
-                ->constrained('m_satuan')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->string('brand_barang')->nullable();
-            $table->decimal('volume_barang', 10, 2)->nullable();
-            $table->text('note_barang')->nullable();
+            $table->string('name_satuan');
+            $table->string('symbol_satuan')->nullable();
+            $table->text('note_satuan')->nullable();
             $table->enum('is_active', ['Y', 'N'])->default('Y')->nullable();
             $table->string('create_by')->nullable();
             $table->string('update_by')->nullable();
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_barang');
+        Schema::dropIfExists('m_satuan');
     }
 };

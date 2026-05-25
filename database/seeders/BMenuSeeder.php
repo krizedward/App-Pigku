@@ -137,6 +137,28 @@ class BMenuSeeder extends Seeder
                 'menu_type'            => 'paging',
                 'is_active'            => 'Y',
             ],
+            [
+                'id'                   => 12,
+                'menu_code'            => 'master-satuan',
+                'menu_category_code'   => 'master',
+                'menu_name'            => 'Master Satuan',
+                'menu_host'            => null,
+                'update_url'           => null,
+                'menu_order'           => '4',
+                'menu_type'            => 'paging',
+                'is_active'            => 'Y',
+            ],
+            [
+                'id'                   => 13,
+                'menu_code'            => 'master-barang',
+                'menu_category_code'   => 'master',
+                'menu_name'            => 'Master Barang',
+                'menu_host'            => null,
+                'update_url'           => null,
+                'menu_order'           => '5',
+                'menu_type'            => 'paging',
+                'is_active'            => 'Y',
+            ],
         ]);
     }
 }
