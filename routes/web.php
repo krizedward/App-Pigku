@@ -175,6 +175,8 @@ Route::middleware('auth')->group(function () {
     // master satuan
     Route::get('/master-satuan', [MSatuanController::class, 'index'])->name('master-satuan.index');
     Route::get('/master-satuan/create', [MSatuanController::class, 'create'])->name('master-satuan.create');
+    Route::get('/master-satuan/{id}/edit', [MSatuanController::class, 'edit'])->name('master-satuan.edit');
+    Route::put('/master-satuan/{id}/update', [MSatuanController::class, 'update'])->name('master-satuan.update');
     Route::post('/master-satuan/store', [MSatuanController::class, 'store'])->name('master-satuan.store');
     Route::delete('/master-satuan/{id}/destroy', [MSatuanController::class, 'destroy'])->name('master-satuan.destroy');
 });

@@ -67,11 +67,13 @@
             </div>
 
             <div class="form-group">
-              <label for="is_active">Active?</label>
-              <select name="is_active" id="is_active" class="form-control" required>
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
-              </select>
+              <label for="is_active">Status Aktif <span class="text-danger">*</span></label><br>
+              <label class="radio-inline mr-4">
+                <input type="radio" name="is_active" value="Y"> Aktif
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="is_active" value="N"> Tidak Aktif
+              </label>
             </div>
             
             <div class="mt-4 mb-4">

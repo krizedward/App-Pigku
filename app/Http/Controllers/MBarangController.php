@@ -33,7 +33,7 @@ class MBarangController extends Controller
     public function create()
     {
         //
-        $satuan = MSatuan::all();
+        $satuan = MSatuan::query()->where('is_active', 'Y')->get();
         return view('m_barang.m_barang_create', compact('satuan'));
         // return view('m_barang.m_barang_create');
     }

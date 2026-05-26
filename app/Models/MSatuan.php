@@ -12,6 +12,7 @@ class MSatuan extends Model
 
     protected $fillable = [
         'name_satuan',
+        'symbol_satuan',
         'note_satuan',
         'is_active',
         // 'nama_barang',

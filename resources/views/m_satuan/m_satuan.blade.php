@@ -63,11 +63,17 @@
                   <td>{{ $data->note_satuan }}</td>
                   <td colspan="2">
                     <div class='d-flex'>
-                      <form action="{{ route('master-satuan.destroy', $data->id) }}" method="POST" style="display:inline;">
+                      <a class='btn btn-sm btn-warning mr-2' href="{{ route('master-satuan.edit', $data->id) }}"><i class='fa fa-edit'></i></a>
+                      <form id="delete-form-{{ $data->id }}" 
+                        action="{{ route('master-satuan.destroy', $data->id) }}" 
+                        method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" onclick="return confirm('Yakin hapus?')" class='btn btn-sm btn-danger'><i
-                            class='fa fa-trash'></i></button>
+                        <button type="submit" 
+                            onclick="confirmAlert(event,{{ $data->id }})"
+                            class="btn btn-danger btn-sm">
+                          <i class='fa fa-trash'></i>
+                        </button>
                       </form>
                     </div>
                   </td>
@@ -91,4 +97,38 @@
     </div>
   </div>
 </div>
+
+<script>
+    function confirmAlert(event, id) {
+        event.preventDefault();
+        
+        Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            text: "Data yang dihapus tidak bisa dikembalikan!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+           }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+                // console.log(id)
+            }
+        })
+    }
+</script>
+@endsection
+
+@section('script')
+  @if(session('success'))
+    <script type="text/javascript">
+      Swal.fire({
+        type: 'success',
+        title: 'Berhasil',
+        text: '{{ session('success') }}',
+      })
+    </script> 
+  @endif
 @endsection

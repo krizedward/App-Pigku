@@ -70,20 +70,14 @@
                         <a class='btn btn-sm btn-warning mr-2' href="{{ route('master-barang.edit', $data->id) }}"><i class='fa fa-edit'></i></a>
                         <form id="delete-form-{{ $data->id }}"
                             action="{{ route('master-barang.destroy', $data->id) }}"
-                            method="POST"
-                            style="display:inline;">
-
+                            method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-
                             <button type="button"
-                                    onclick="confirmAlert({{ $data->id }})"
-                                    class="btn btn-danger btn-sm">
-
-                                <i class="fa fa-trash"></i>
-
+                                onclick="confirmAlert(event,{{ $data->id }})"
+                                class="btn btn-danger btn-sm">
+                              <i class="fa fa-trash"></i>
                             </button>
-
                         </form>
                     </div>
                   </td>
@@ -109,7 +103,8 @@
 </div>
 
 <script>
-    function confirmAlert(id) {
+    function confirmAlert(event, id) {
+        event.preventDefault();
 
         Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -121,7 +116,7 @@
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal'
            }).then((result) => {
-            if (result.value) {
+            if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();
                 // console.log(id)
             }
