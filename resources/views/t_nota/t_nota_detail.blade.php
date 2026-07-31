@@ -51,11 +51,11 @@
             <!-- start -->
             <li class="nav-item">
               <a class="nav-link active" id="pills-detail1-tab" data-toggle="pill" aria-selected="true"
-                href="#pills-detail1" role="tab" aria-controls="pills-detail1">Tambahan</a>
+                href="#pills-detail1" role="tab" aria-controls="pills-detail1">Payment</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="pills-detail2-tab" data-toggle="pill" aria-selected="false" href="#pills-detail2"
-                role="tab" aria-controls="pills-detail2">Payment</a>
+                role="tab" aria-controls="pills-detail2">Tambahan</a>
             </li>
             <!-- end -->
           </ul>
@@ -66,33 +66,7 @@
         <div class="tab-content" id="pills-tabContent">
           @if($statusNota != 'paid')
             <div class="tab-pane fade show active" id="pills-detail1" role="tabpanel" aria-labelledby="pills-detail1-tab">
-              <form action="{{ route('nota.update', $nota_id) }}" method="POST" id="orderForm">
-                @csrf
-                @method('PUT')
-                <input type="hidden" class="form-control" value="{{$nota_id}}" name="nota_id" required>
-                <input type="hidden" class="form-control" value="Tambahan" name="note_order_detail" required>
-                
-                <div class="form-group">
-                  <label for="menu_id">Pilih Menu</label>
-                  <select name="menu_id" id="menu_id" class="form-control">
-                    <option value="">-- Pilih Menu --</option>
-                    @foreach($menu as $dt)
-                    <option value="{{ $dt->id }}">{{ $dt->name_menu }}</option>
-                    @endforeach
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="qty_menu">Jumlah Order</label>
-                  <input type="text" class="form-control" id="qty_menu" name="qty_menu" placeholder="Masukkan Jumlah Order"
-                    required>
-                </div>
-
-                <button type="submit" class="btn btn-success w-100 mt-2">Simpan</button>
-              </form>
-            </div>
-
-            <div class="tab-pane fade" id="pills-detail2" role="tabpanel" aria-labelledby="pills-detail2-tab">
+              <!-- form pembayaran -->
               <form action="{{ route('nota.payment', $nota_id) }}" method="POST">
                 @csrf
                 
@@ -129,6 +103,34 @@
                   <input type="text" class="form-control" id="qty_menu" name="qty_menu" placeholder="Masukkan Jumlah Order"
                     required>
                 </div> -->
+
+                <button type="submit" class="btn btn-success w-100 mt-2">Simpan</button>
+              </form>
+            </div>
+
+            <div class="tab-pane fade" id="pills-detail2" role="tabpanel" aria-labelledby="pills-detail2-tab">
+              <!-- form tambah menu -->
+              <form action="{{ route('nota.update', $nota_id) }}" method="POST" id="orderForm">
+                @csrf
+                @method('PUT')
+                <input type="hidden" class="form-control" value="{{$nota_id}}" name="nota_id" required>
+                <input type="hidden" class="form-control" value="Tambahan" name="note_order_detail" required>
+                
+                <div class="form-group">
+                  <label for="menu_id">Pilih Menu</label>
+                  <select name="menu_id" id="menu_id" class="form-control">
+                    <option value="">-- Pilih Menu --</option>
+                    @foreach($menu as $dt)
+                    <option value="{{ $dt->id }}">{{ $dt->name_menu }}</option>
+                    @endforeach
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="qty_menu">Jumlah Order</label>
+                  <input type="text" class="form-control" id="qty_menu" name="qty_menu" placeholder="Masukkan Jumlah Order"
+                    required>
+                </div>
 
                 <button type="submit" class="btn btn-success w-100 mt-2">Simpan</button>
               </form>
